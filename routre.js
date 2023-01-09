@@ -38,6 +38,21 @@ if(oldstudent){
 })
 
 
+router.get("/student",async function(req,res){
+
+    try{
+        let data=req.query
+        const student=await studentModel.find(data)
+        if(!student)return res.status(404).send({status:false ,msg:"NO student found with this query"})
+        res.status(201).send({status:true,data:student})
+
+    }
+    catch(err){
+        res.status(500).send({status:false ,msg:err.message})
+    }
+})
+
+
 router.all("/*" ,function(req,res){
 return res.status(404).send({msg:"Galat api hai Boss Dusra rasta chunlijiye AOO KAVI HAVELI MAI"})
 })
