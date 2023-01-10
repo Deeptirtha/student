@@ -3,7 +3,6 @@ const router= express.Router()
 const studentModel=require("./studentmodel")
 
 
-//===================================CUSTOMER API's======================================//
 router.post("/student",async function(req,res){
 
     try{
@@ -44,13 +43,31 @@ router.get("/student",async function(req,res){
         let data=req.query
         const student=await studentModel.find(data)
         if(!student)return res.status(404).send({status:false ,msg:"NO student found with this query"})
-        res.status(201).send({status:true,data:student})
+        res.status(200).send({status:true,data:student})
 
     }
     catch(err){
         res.status(500).send({status:false ,msg:err.message})
     }
 })
+
+router.delete("/student/:name",async function(req,res){
+
+    try{
+        let data=req.params
+        data.isDeleted=false
+        const student=await studentModel.find(data)
+        if(!student)return res.status(404).send({status:false ,msg:"NO student found with this name"})
+        const deletestudent= await studentModel.updateOne(data,{isDeleted:true})
+
+        res.status(201).send({status:true,msg:"student data deleted successfully"})
+
+    }
+    catch(err){
+        res.status(500).send({status:false ,msg:err.message})
+    }
+})
+
 
 
 router.all("/*" ,function(req,res){
